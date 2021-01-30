@@ -5,9 +5,7 @@ import { Input } from '../components/Todo/Input';
 import { List } from '../components/Todo/List';
 import { useDispatch } from 'react-redux';
 import { addTodo } from '../slices/todoListSlice';
-import { unwrapResult, ThunkDispatch, Action } from '@reduxjs/toolkit';
-import { RootState } from '../reducers';
-import { asyncAddTodo } from '../slices/asyncTodoListSlice';
+import { useTodoListStore } from '../hooks/useTodoListStore';
 
 type FormData = {
     todo: string;
@@ -20,18 +18,15 @@ const Home: NextPage = () => {
       },
   });
     const dispatch = useDispatch();
-  const onSubmit = handleSubmit(({ todo }) => {
+    const { asyncAddTodo } = useTodoListStore();
+    const onSubmit = handleSubmit(({ todo }) => {
       console.log('submit:', todo)
       dispatch(addTodo(todo));
       reset();
   });
 
-    const thunkDispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
     const onAsyncSubmit = handleSubmit(({ todo }) => {
-        thunkDispatch(asyncAddTodo(todo))
-            .then(unwrapResult)
-            .then((payload) => dispatch(addTodo(payload)))
-            .catch((payload) => console.error(payload));
+        asyncAddTodo(todo);
         reset();
     });
   return (
