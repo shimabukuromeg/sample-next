@@ -3,8 +3,6 @@ import Head from 'next/head';
 import { useForm } from 'react-hook-form';
 import { Input } from '../components/Todo/Input';
 import { List } from '../components/Todo/List';
-import { useDispatch } from 'react-redux';
-import { addTodo } from '../slices/todoListSlice';
 import { useTodoListStore } from '../hooks/useTodoListStore';
 
 type FormData = {
@@ -17,11 +15,11 @@ const Home: NextPage = () => {
           todo: '',
       },
   });
-    const dispatch = useDispatch();
-    const { asyncAddTodo } = useTodoListStore();
+    const { addTodo, asyncAddTodo } = useTodoListStore();
+
     const onSubmit = handleSubmit(({ todo }) => {
       console.log('submit:', todo)
-      dispatch(addTodo(todo));
+      addTodo(todo);
       reset();
   });
 
